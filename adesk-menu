@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 MENU_WIDTH = 280
+MENU_HEIGHT = 180
 
 import os
 import sys
@@ -240,7 +241,7 @@ class Menu():
 
         self.frame = gtk.Frame()
         self.frame.show()
-        self.frame.set_size_request(MENU_WIDTH,-1)
+        self.frame.set_size_request(MENU_WIDTH,MENU_HEIGHT)
 
         self.nbook = gtk.Notebook()
         self.nbook.show()
