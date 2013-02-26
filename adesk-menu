@@ -304,7 +304,7 @@ class Menu():
                 try:
                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon, 24, 24)
                 except:
-                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size('/usr/share/pixmaps/menu.png', 24, 24)
+                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size('default.png', 24, 24)
                 image.set_from_pixbuf(pixbuf)
                 image.show()
 
