@@ -1,7 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
-MENU_WIDTH = 380
+MENU_WIDTH = 280
 
 import os
 import sys
@@ -333,14 +333,13 @@ class Menu():
         screen_width, screen_height = gtk.gdk.screen_width(), gtk.gdk.screen_height()
         rootwin = self.window.get_screen().get_root_window()
         w_width , w_height = self.window.get_size()
-        x, y, mods = rootwin.get_pointer()
-        if x + MENU_WIDTH > screen_width:
-            x = screen_width - MENU_WIDTH
-        if y + w_height > screen_height:
-            y = screen_height - w_height
+        # Set x always to left
+        x = 0
+        # Set y value to be on top of tint2
+        y = screen_height - w_height - 30 # 30 it's the tint2 panel height
         #to move the menu adjust the x= and y=    
         #this should not be commented out
-        self.window.move(x=10, y=40)
+        self.window.move(x, y)
 
     def lost_focus(self, widget, event):
         if self.focus_check:
@@ -414,3 +413,4 @@ if __name__ == "__main__":
         g_menu.window.show()
         g_menu.focus_check = True
         g_menu.run()
+        
