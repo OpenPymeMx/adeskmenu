@@ -152,7 +152,7 @@ def parse_desktop_dir(check_config=True):
     else:
         print('scan /usr/share/applications and parse .desktop file ..')
 
-        APP_PATH = '/usr/share/applications/fedrojesa'
+        APP_PATH = '/usr/share/applications/fedrojesa/'
         listdir = os.listdir(APP_PATH)
 
         for i in listdir:
