@@ -151,9 +151,9 @@ def parse_desktop_dir(check_config=True):
         f.close()
 
     else:
-        print('scan /usr/share/applications and parse .desktop file ..')
+        print('scan /home/.config/adesk-menu/applications and parse .desktop file ..')
 
-        APP_PATH = '/usr/share/applications/fedrojesa/'
+        APP_PATH = os.getenv('HOME') + '/.config/adesk-menu/applications/'
         listdir = os.listdir(APP_PATH)
 
         for i in listdir:
@@ -224,7 +224,7 @@ class Menu():
         gtk.main()
 
     def create_window(self):
-        self.window = gtk.Window() #gtk.WINDOW_POPUP) ## gtk.WINDOW_TOPLEVEL)
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL) #gtk.WINDOW_POPUP) ## gtk.WINDOW_TOPLEVEL)
         self.window.connect("destroy", self.doquit)
         #~ self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_UTILITY)
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
@@ -238,6 +238,7 @@ class Menu():
         self.window.set_resizable(True)
         self.window.set_border_width(2)
         self.window.set_app_paintable(True)
+        self.window.set_skip_taskbar_hint(True)
 
         self.frame = gtk.Frame()
         self.frame.show()
@@ -341,6 +342,7 @@ class Menu():
         #to move the menu adjust the x= and y=    
         #this should not be commented out
         self.window.move(x, y)
+        self.window.grab_focus()
 
     def lost_focus(self, widget, event):
         if self.focus_check:
@@ -385,33 +387,37 @@ def save_pid():
     print "PID saved to %s" % pid_file
 
 if __name__ == "__main__":
-
+    cmd = "kill -10 `cat ~/.config/adesk-menu/pid`"
     if len(sys.argv) == 2:
         if sys.argv[1] == '-s':
             write_config()
         elif sys.argv[1] == '-t':
-            cmd = "kill -10 `cat ~/.config/adesk-menu/pid`"
             os.system(cmd)
         else:
             print "Unknow option .."
             print "Usage : adesk-menu [-s|-t]"
             print " -s : save menu list ( ~/.config/adesk-menu/config )"
             print " -t : show menu ( cursor position )"
-    else:
-        global g_menu
-        signal.signal(signal.SIGUSR1, SigUSR1Handler)
-        save_pid()
-
-        ## need to change directory
-        SRC_PATH = os.path.dirname(os.path.realpath( __file__ ))
-        os.chdir(SRC_PATH)
-
-        g_menu = Menu()
-        # change directory to Home
-        os.chdir(os.getenv('HOME'))
-        g_menu.hide_me = False
-        g_menu.show_menu(g_menu.mode)
-        g_menu.window.show()
-        g_menu.focus_check = True
-        g_menu.run()
-        
+    else: 
+        if os.system(cmd):
+            global g_menu
+            signal.signal(signal.SIGUSR1, SigUSR1Handler)
+            save_pid()
+    
+            ## need to change directory
+            SRC_PATH = os.path.dirname(os.path.realpath( __file__ ))
+            os.chdir(SRC_PATH)
+    
+            g_menu = Menu()
+            # change directory to Home
+            os.chdir(os.getenv('HOME'))
+            g_menu.hide_me = False
+            g_menu.show_menu(g_menu.mode)
+            g_menu.window.show()
+            g_menu.focus_check = True
+            # Set focus to current window
+            g_menu.window.present()
+            g_menu.run()
+        else:
+            sys.exit()
+            

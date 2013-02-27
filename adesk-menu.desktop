@@ -2,4 +2,4 @@
 Type=Application
 Name=menu
 Exec=/usr/bin/adesk-menu
-Icon=/usr/share/pixmaps/debian-logo.png
+Icon=/usr/share/pixmaps/menu.png
