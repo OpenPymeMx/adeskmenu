@@ -152,7 +152,8 @@ def parse_desktop_dir(check_config=True):
 
     else:
         print('scan /home/.config/adesk-menu/applications and parse .desktop file ..')
-
+        
+        #APP_PATH = '/usr/share/applications/'
         APP_PATH = os.getenv('HOME') + '/.config/adesk-menu/applications/'
         listdir = os.listdir(APP_PATH)
 
@@ -365,11 +366,11 @@ class Menu():
 
 global g_menu
 
-def SigUSR1Handler(signum, frame):
-    """ grab signal to reload config """
+def signal_handler(signum, frame):
+    """ grab signal to quit """
     # kill -10 <adesk-menu pid>
     global g_menu
-    g_menu.callback_signal()
+    g_menu.doquit()
     return
 
 def save_pid():
@@ -387,11 +388,11 @@ def save_pid():
     print "PID saved to %s" % pid_file
 
 if __name__ == "__main__":
-    cmd = "kill -10 `cat ~/.config/adesk-menu/pid`"
     if len(sys.argv) == 2:
         if sys.argv[1] == '-s':
             write_config()
         elif sys.argv[1] == '-t':
+            cmd = "kill -10 `cat ~/.config/adesk-menu/pid`"
             os.system(cmd)
         else:
             print "Unknow option .."
@@ -399,9 +400,9 @@ if __name__ == "__main__":
             print " -s : save menu list ( ~/.config/adesk-menu/config )"
             print " -t : show menu ( cursor position )"
     else: 
-        if os.system(cmd):
+        if os.system("kill -INT `cat ~/.config/adesk-menu/pid`"):
             global g_menu
-            signal.signal(signal.SIGUSR1, SigUSR1Handler)
+            signal.signal(signal.SIGINT, signal_handler)
             save_pid()
     
             ## need to change directory
